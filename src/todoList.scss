@@ -1,0 +1,7 @@
+.ui.list > .item {
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: line-through;
+  }
+}
