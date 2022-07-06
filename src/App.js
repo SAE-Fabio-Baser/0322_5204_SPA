@@ -1,53 +1,53 @@
 import React, { useEffect, useState } from 'react'
-
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 
-import Navbar from './Components/Navbar'
-import TodoList from './TodoList'
-import RegisterBox from './Components/RegisterBox'
-import LoginBox from './Components/LoginBox'
-import UserList from './Components/UserList'
+import Sidenav from './Components/Sidenav'
+import GenresView from './Views/Genres'
+import DiscoverView from './Views/Discover'
 
-function Logout(props) {
-  const navigate = useNavigate()
-
-  props.setLoggedIn(false)
-  localStorage.removeItem('token')
-  useEffect(() => {
-    toast('Erfolgreich abgemeldet', { type: 'success' })
-    navigate('/')
-  }, [])
-
-  return null
-}
+const routes = [
+  {
+    path: '/',
+    element: <h1 className="text-purple-700 font-bold">Home</h1>,
+    navText: 'Home',
+    showInMainNav: true,
+  },
+  {
+    path: '/discover',
+    element: <DiscoverView />,
+    navText: 'Discover',
+    showInMainNav: true,
+  },
+  {
+    path: '/watchlist',
+    element: <h1 className="text-purple-700 font-bold">Watchlist</h1>,
+    navText: 'My Watchlist',
+    showInMainNav: true,
+  },
+  {
+    path: '/genres',
+    element: <GenresView />,
+    navText: 'Genres',
+    showInMainNav: true,
+  },
+  {
+    path: '/impressum',
+    element: <h1 className="text-purple-700 font-bold">Impressum</h1>,
+    navText: 'Impressum',
+    showInMainNav: false,
+  },
+]
 
 function App() {
-  const token = localStorage.getItem('token')
-
-  const [loggedIn, setLoggedIn] = useState(!!token)
-
   return (
     <BrowserRouter>
       <ToastContainer />
-      <Navbar loggedIn={loggedIn} />
+      <Sidenav routes={routes} />
       <Routes>
-        <Route path={'/'} element={<h1>Home</h1>} />
-        <Route path={'/about'} element={<h1>Über uns</h1>} />
-        <Route path={'/todo'} element={<TodoList />} />
-        <Route path={'/users'} element={<UserList loggedIn={loggedIn} />} />
-
-        <Route
-          path={'/register'}
-          element={<RegisterBox setLoggedIn={setLoggedIn} />}
-        />
-        <Route
-          path={'/login'}
-          element={<LoginBox setLoggedIn={setLoggedIn} />}
-        />
-        <Route
-          path={'/logout'}
-          element={<Logout setLoggedIn={setLoggedIn} />}
+        {routes.map(({ path, element }) => (
+          <Route key={path} path={path} element={element} />
+        ))}
         />
       </Routes>
     </BrowserRouter>

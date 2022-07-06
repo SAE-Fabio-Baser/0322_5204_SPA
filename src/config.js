@@ -1,3 +1,3 @@
 export default {
-  backendUrl: 'http://localhost:3000',
+  movieDbApiKey: '44dcdfb53f04335976b53ecfaa21b8a6',
 }
