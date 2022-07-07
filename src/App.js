@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import { initializeApp } from 'firebase/app'
 
-import Sidenav from './Components/Sidenav'
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+
 import GenresView from './Views/Genres'
 import DiscoverView from './Views/Discover'
 import Topmenu from './Components/Topmenu'
 import MovieView from './Views/MovieView'
+import login from './lib/login'
 
 const routes = [
   {
@@ -54,6 +57,19 @@ const routes = [
 ]
 
 function App() {
+  useEffect(() => {
+    const firebaseConfig = {
+      apiKey: 'AIzaSyCnXD2mD-u6Y41vcGlVirBgiFqwvz-8_b8',
+      authDomain: 'movieparty-93773.firebaseapp.com',
+      projectId: 'movieparty-93773',
+      storageBucket: 'movieparty-93773.appspot.com',
+      messagingSenderId: '40895682681',
+      appId: '1:40895682681:web:19f65a7ba491157e8c5ca8',
+    }
+
+    const firebase = initializeApp(firebaseConfig)
+  }, [])
+
   return (
     <BrowserRouter>
       <ToastContainer />
