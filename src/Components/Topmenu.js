@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
-import { Button, Icon, Input, Menu, Modal } from 'semantic-ui-react'
+import {
+  Button,
+  Dropdown,
+  Icon,
+  Image,
+  Input,
+  Menu,
+  Modal,
+} from 'semantic-ui-react'
 import { Link, useLocation } from 'react-router-dom'
 import login from '../lib/login'
 import logout from '../lib/logout'
 
-function Topmenu({ routes, userCredentials, setUserInfo, setUseCredentials }) {
+function Topmenu({
+  routes,
+  userCredentials,
+  setUserInfo,
+  userInfo,
+  setUserCredentials,
+}) {
   const { pathname } = useLocation()
   const [signInModalOpen, setSignInModalOpen] = useState(false)
   const isLoggedIn = !!userCredentials?.accessToken
@@ -12,14 +26,14 @@ function Topmenu({ routes, userCredentials, setUserInfo, setUseCredentials }) {
   function handleSignInClick(e, { name }) {
     login(name)
       .then(({ credentials, userInfo }) => {
-        setUseCredentials(credentials)
+        setUserCredentials(credentials)
         setUserInfo(userInfo)
       })
       .catch(console.error)
   }
 
   return (
-    <Menu pointing secondary>
+    <Menu secondary>
       <Menu.Menu>
         {routes.map((route) =>
           route.showInMainNav ? (
@@ -42,18 +56,26 @@ function Topmenu({ routes, userCredentials, setUserInfo, setUseCredentials }) {
         {!isLoggedIn && <Menu.Item>Register</Menu.Item>}
         {isLoggedIn ? (
           <Menu.Item>
-            <Button
-              circular
-              basic
-              color="blue"
-              onClick={() => {
-                logout()
-                setUseCredentials(null)
-              }}
-            >
-              <Icon name={'user circle'} />
-              Sign out
-            </Button>
+            <Image
+              avatar
+              src={userInfo?.photoURL}
+              referrerPolicy="no-referrer"
+            />
+            <Dropdown text={userInfo.displayName}>
+              <Dropdown.Menu>
+                <Dropdown.Item text="Account" />
+                <Dropdown.Item disabled text="Settings" />
+                <Dropdown.Divider />
+                <Dropdown.Item
+                  text="Logout"
+                  onClick={() => {
+                    logout()
+                    setUserInfo({})
+                    setUserCredentials({})
+                  }}
+                />
+              </Dropdown.Menu>
+            </Dropdown>
           </Menu.Item>
         ) : (
           <Modal

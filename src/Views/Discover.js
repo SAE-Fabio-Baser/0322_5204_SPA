@@ -40,8 +40,8 @@ function DiscoverView({ genreView }) {
       <div className="grid grid-cols-8 gap-4">
         {movies.map((movie) => {
           return (
-            <Link to={'/movie/' + movie.id}>
-              <div key={movie.id}>
+            <Link key={movie.id} to={'/movie/' + movie.id}>
+              <div>
                 <img
                   style={{ width: '100%' }}
                   src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}

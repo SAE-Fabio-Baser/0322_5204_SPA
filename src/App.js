@@ -4,65 +4,77 @@ import { ToastContainer } from 'react-toastify'
 import { initializeApp } from 'firebase/app'
 import { getStorage } from './lib/storage'
 
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  linkWithPopup,
+} from 'firebase/auth'
 
 import GenresView from './Views/Genres'
 import DiscoverView from './Views/Discover'
 import Topmenu from './Components/Topmenu'
 import MovieView from './Views/MovieView'
 import login from './lib/login'
-
-const routes = [
-  {
-    path: '/',
-    element: <h1 className="text-purple-700 font-bold">Home</h1>,
-    navText: 'Home',
-    showInMainNav: true,
-  },
-  {
-    path: '/discover',
-    element: <DiscoverView />,
-    navText: 'Discover',
-    showInMainNav: true,
-  },
-  {
-    path: '/movie/:movieId',
-    element: <MovieView />,
-    navText: 'Movie Detail',
-    showInMainNav: false,
-  },
-  {
-    path: '/watchlist',
-    element: <h1 className="text-purple-700 font-bold">Watchlist</h1>,
-    navText: 'My Watchlist',
-    showInMainNav: true,
-  },
-  {
-    path: '/genres',
-    element: <GenresView />,
-    navText: 'Genres',
-    showInMainNav: true,
-  },
-  {
-    path: '/genre/:genreId',
-    element: <DiscoverView genreView />,
-    navText: 'Genre',
-    showInMainNav: false,
-  },
-  {
-    path: '/impressum',
-    element: <h1 className="text-purple-700 font-bold">Impressum</h1>,
-    navText: 'Impressum',
-    showInMainNav: false,
-  },
-]
+import AccountView from './Views/Account'
 
 function App() {
-  const [userCredentials, setUseCredentials] = useState(
+  const [userCredentials, setUserCredentials] = useState(
     getStorage('userCredentials') || {}
   )
-
   const [userInfo, setUserInfo] = useState(getStorage('userInfo') || {})
+
+  const routes = [
+    {
+      path: '/',
+      element: <h1 className="text-purple-700 font-bold">Home</h1>,
+      navText: 'Home',
+      showInMainNav: true,
+    },
+    {
+      path: '/discover',
+      element: <DiscoverView />,
+      navText: 'Discover',
+      showInMainNav: true,
+    },
+    {
+      path: '/movie/:movieId',
+      element: <MovieView />,
+      navText: 'Movie Detail',
+      showInMainNav: false,
+    },
+    {
+      path: '/watchlist',
+      element: <h1 className="text-purple-700 font-bold">Watchlist</h1>,
+      navText: 'My Watchlist',
+      showInMainNav: true,
+    },
+    {
+      path: '/genres',
+      element: <GenresView />,
+      navText: 'Genres',
+      showInMainNav: true,
+    },
+    {
+      path: '/genre/:genreId',
+      element: <DiscoverView genreView />,
+      navText: 'Genre',
+      showInMainNav: false,
+    },
+    {
+      path: '/account',
+      element: <AccountView />,
+      navText: 'Account',
+      showInMainNav: false,
+    },
+    {
+      path: '/impressum',
+      element: <h1 className="text-purple-700 font-bold">Impressum</h1>,
+      navText: 'Impressum',
+      showInMainNav: false,
+    },
+  ]
 
   useEffect(() => {
     const firebaseConfig = {
@@ -86,8 +98,9 @@ function App() {
       <Topmenu
         routes={routes}
         userCredentials={userCredentials}
+        setUserCredentials={setUserCredentials}
+        userInfo={userInfo}
         setUserInfo={setUserInfo}
-        setUseCredentials={setUseCredentials}
       />
       <Routes>
         {routes.map(({ path, element }) => (
