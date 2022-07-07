@@ -2,13 +2,20 @@ import React, { useState } from 'react'
 import { Button, Icon, Input, Menu, Modal } from 'semantic-ui-react'
 import { Link, useLocation } from 'react-router-dom'
 import login from '../lib/login'
+import logout from '../lib/logout'
 
-function Topmenu({ routes }) {
+function Topmenu({ routes, userCredentials, setUserInfo, setUseCredentials }) {
   const { pathname } = useLocation()
   const [signInModalOpen, setSignInModalOpen] = useState(false)
+  const isLoggedIn = !!userCredentials?.accessToken
 
   function handleSignInClick(e, { name }) {
-    login(name).then(console.log).catch(console.error)
+    login(name)
+      .then(({ credentials, userInfo }) => {
+        setUseCredentials(credentials)
+        setUserInfo(userInfo)
+      })
+      .catch(console.error)
   }
 
   return (
@@ -32,34 +39,51 @@ function Topmenu({ routes }) {
             placeholder="Search ..."
           />
         </Menu.Item>
-        <Menu.Item>Register</Menu.Item>
-        <Modal
-          size={'mini'}
-          dimmer={'blurring'}
-          onOpen={() => setSignInModalOpen(true)}
-          onClose={() => setSignInModalOpen(false)}
-          open={signInModalOpen}
-          trigger={
-            <Menu.Item>
-              <Button circular basic color="blue">
-                <Icon name={'user circle'} />
-                Sign in
+        {!isLoggedIn && <Menu.Item>Register</Menu.Item>}
+        {isLoggedIn ? (
+          <Menu.Item>
+            <Button
+              circular
+              basic
+              color="blue"
+              onClick={() => {
+                logout()
+                setUseCredentials(null)
+              }}
+            >
+              <Icon name={'user circle'} />
+              Sign out
+            </Button>
+          </Menu.Item>
+        ) : (
+          <Modal
+            size={'mini'}
+            dimmer={'blurring'}
+            onOpen={() => setSignInModalOpen(true)}
+            onClose={() => setSignInModalOpen(false)}
+            open={signInModalOpen}
+            trigger={
+              <Menu.Item>
+                <Button circular basic color="blue">
+                  <Icon name={'user circle'} />
+                  Sign in
+                </Button>
+              </Menu.Item>
+            }
+          >
+            <Modal.Header>Sign in with your favourite SSO</Modal.Header>
+            <Modal.Content>
+              <Button name="google" basic onClick={handleSignInClick}>
+                <Icon name="google" />
+                Google
               </Button>
-            </Menu.Item>
-          }
-        >
-          <Modal.Header>Sign in with your favourite SSO</Modal.Header>
-          <Modal.Content>
-            <Button name="google" basic onClick={handleSignInClick}>
-              <Icon name="google" />
-              Google
-            </Button>
-            <Button name="github" basic onClick={handleSignInClick}>
-              <Icon name="github" />
-              GitHub
-            </Button>
-          </Modal.Content>
-        </Modal>
+              <Button name="github" basic onClick={handleSignInClick}>
+                <Icon name="github" />
+                GitHub
+              </Button>
+            </Modal.Content>
+          </Modal>
+        )}
       </Menu.Menu>
     </Menu>
   )

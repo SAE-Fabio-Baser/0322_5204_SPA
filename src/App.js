@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { initializeApp } from 'firebase/app'
+import { getStorage } from './lib/storage'
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 
@@ -57,6 +58,12 @@ const routes = [
 ]
 
 function App() {
+  const [userCredentials, setUseCredentials] = useState(
+    getStorage('userCredentials') || {}
+  )
+
+  const [userInfo, setUserInfo] = useState(getStorage('userInfo') || {})
+
   useEffect(() => {
     const firebaseConfig = {
       apiKey: 'AIzaSyCnXD2mD-u6Y41vcGlVirBgiFqwvz-8_b8',
@@ -70,10 +77,18 @@ function App() {
     const firebase = initializeApp(firebaseConfig)
   }, [])
 
+  console.debug('UserCredentials: ', userCredentials)
+  console.debug('UserInfo: ', userInfo)
+
   return (
     <BrowserRouter>
       <ToastContainer />
-      <Topmenu routes={routes} />
+      <Topmenu
+        routes={routes}
+        userCredentials={userCredentials}
+        setUserInfo={setUserInfo}
+        setUseCredentials={setUseCredentials}
+      />
       <Routes>
         {routes.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />

@@ -4,6 +4,7 @@ import {
   GithubAuthProvider,
   signInWithPopup,
 } from 'firebase/auth'
+import { setStorage } from './storage'
 
 export default function login(providerName) {
   const providers = {
@@ -17,10 +18,13 @@ export default function login(providerName) {
     if (!provider) reject('No Provider matching: ' + providerName)
 
     const auth = getAuth()
+    window.auth = auth
     signInWithPopup(auth, provider)
       .then((response) => {
         const credentials = GoogleAuthProvider.credentialFromResult(response)
-        resolve(credentials)
+        setStorage('userCredentials', credentials)
+        setStorage('userInfo', auth.currentUser)
+        resolve({ credentials, userInfo: auth.currentUser })
       })
       .catch(reject)
   })
