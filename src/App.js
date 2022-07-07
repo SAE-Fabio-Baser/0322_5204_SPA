@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
+import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 
 import Sidenav from './Components/Sidenav'
 import GenresView from './Views/Genres'
 import DiscoverView from './Views/Discover'
+import Topmenu from './Components/Topmenu'
+import MovieView from './Views/MovieView'
 
 const routes = [
   {
@@ -20,6 +22,12 @@ const routes = [
     showInMainNav: true,
   },
   {
+    path: '/movie/:movieId',
+    element: <MovieView />,
+    navText: 'Movie Detail',
+    showInMainNav: false,
+  },
+  {
     path: '/watchlist',
     element: <h1 className="text-purple-700 font-bold">Watchlist</h1>,
     navText: 'My Watchlist',
@@ -30,6 +38,12 @@ const routes = [
     element: <GenresView />,
     navText: 'Genres',
     showInMainNav: true,
+  },
+  {
+    path: '/genre/:genreId',
+    element: <DiscoverView genreView />,
+    navText: 'Genre',
+    showInMainNav: false,
   },
   {
     path: '/impressum',
@@ -43,7 +57,7 @@ function App() {
   return (
     <BrowserRouter>
       <ToastContainer />
-      <Sidenav routes={routes} />
+      <Topmenu routes={routes} />
       <Routes>
         {routes.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />

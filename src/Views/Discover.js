@@ -1,28 +1,64 @@
 import React, { useEffect, useState } from 'react'
 import movieDB from '../lib/MovieDB'
+import { Label } from 'semantic-ui-react'
+import { Link, useParams } from 'react-router-dom'
 
-function DiscoverView() {
+function DiscoverView({ genreView }) {
+  const { genreId = '' } = useParams()
   const [movies, setMovies] = useState([])
+  const [genres, setGenres] = useState([])
+
+  console.log(genreId)
 
   useEffect(() => {
-    movieDB.discoverMovies({}).then((data) => setMovies(data.results))
-  }, [])
+    movieDB.getGenres({ language: 'de_DE' }).then((data) => {
+      const genres = {}
+      data.genres.forEach((genre) => {
+        genres[genre.id] = genre.name
+      })
 
-  console.log('Movies: ', movies)
+      setGenres(genres)
+    })
+
+    const discoverOptions = {}
+    if (genreView) {
+      discoverOptions.with_genres = genreId
+    }
+
+    movieDB
+      .discoverMovies(discoverOptions)
+      .then((data) => setMovies(data.results))
+  }, [genreId])
+
+  console.debug('Movies: ', movies)
+  console.debug('Genres: ', genres)
 
   return (
-    <div>
-      {movies.map((movie) => {
-        return (
-          <div style={{ border: '1px solid black' }}>
-            <img
-              style={{ width: '100px' }}
-              src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-            />
-            <p>{movie.original_title}</p>
-          </div>
-        )
-      })}
+    <div style={{ background: '262626 !important' }}>
+      <h1 className={'text-7xl text-center m-8'}>{genres[genreId]}</h1>
+
+      <div className="grid grid-cols-8 gap-4">
+        {movies.map((movie) => {
+          return (
+            <Link to={'/movie/' + movie.id}>
+              <div key={movie.id}>
+                <img
+                  style={{ width: '100%' }}
+                  src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                />
+                {/*<div>
+                <p>{movie.original_title}</p>
+                {movie.genre_ids.map((genreId) => (
+                  <Link to={'/genre/' + genreId}>
+                    <Label size="mini">{genres[genreId]}</Label>
+                  </Link>
+                ))}
+              </div>*/}
+              </div>
+            </Link>
+          )
+        })}
+      </div>
     </div>
   )
 }

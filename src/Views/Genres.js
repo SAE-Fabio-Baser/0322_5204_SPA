@@ -7,8 +7,6 @@ function GenresView() {
 
   useEffect(() => {
     movieDB.getGenres().then((res) => setGenres(res.genres))
-
-    movieDB.discoverMovies({ page: 2 }).then(console.log)
   }, [])
 
   console.log('Genres: ', genres)
