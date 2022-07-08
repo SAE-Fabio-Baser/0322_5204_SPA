@@ -10,7 +10,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="0322_WBD5204_Backend" />
     <orderEntry type="library" name="tailwindcss" level="application" />
     <orderEntry type="library" name="semantic-ui-react" level="application" />
   </component>
