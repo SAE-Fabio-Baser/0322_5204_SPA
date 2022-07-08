@@ -5,8 +5,14 @@ import {
   signInWithPopup,
 } from 'firebase/auth'
 import { setStorage } from './storage'
+import firebase from 'firebase/compat'
+import OAuthCredential = firebase.auth.OAuthCredential
+import User = firebase.User
 
-export default function login(providerName) {
+export default function login(providerName: SupportedProvider): Promise<{
+  credentials: OAuthCredential | null
+  userInfo: Partial<User> | null
+}> {
   const providers = {
     google: GoogleAuthProvider,
     github: GithubAuthProvider,

@@ -1,6 +1,8 @@
 import config from '../config'
 
-async function get(endpoint, options = {}) {
+type Options = Record<string, string>
+
+async function get(endpoint: string, options: Options = {}) {
   const params = new URLSearchParams('')
   params.set('api_key', config.movieDbApiKey)
 
@@ -16,9 +18,9 @@ async function get(endpoint, options = {}) {
 }
 
 export default {
-  getGenres: (o) => get('/genre/movie/list', o),
-  discoverMovies: (o) => get('/discover/movie', o),
-  getMovie: ({ movie_id, ...o }) => get(`/movie/${movie_id}`, o),
-  getProviders: ({ movie_id, ...o }) =>
+  getGenres: (o: Options) => get('/genre/movie/list', o),
+  discoverMovies: (o: Options) => get('/discover/movie', o),
+  getMovie: ({ movie_id, ...o }: Options) => get(`/movie/${movie_id}`, o),
+  getProviders: ({ movie_id, ...o }: Options) =>
     get(`/movie/${movie_id}/watch/providers`, o),
 }

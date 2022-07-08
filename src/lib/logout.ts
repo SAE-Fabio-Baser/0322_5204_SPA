@@ -1,5 +1,5 @@
 import { removeStorage } from './storage'
 
-export default function () {
+export default function (): void {
   removeStorage('userCredentials')
 }

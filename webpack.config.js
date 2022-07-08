@@ -6,7 +6,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const config = {
   mode: 'development',
   entry: './src/index.js',
-  devServer: {},
+  devServer: {
+    port: 1234,
+    historyApiFallback: true,
+  },
   stats: 'minimal',
   output: {
     path: path.resolve(__dirname, 'dist'),

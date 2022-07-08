@@ -3,7 +3,7 @@ import movieDB from '../lib/MovieDB'
 import { Label } from 'semantic-ui-react'
 import { Link, useParams } from 'react-router-dom'
 
-function DiscoverView({ genreView }) {
+function DiscoverView({ genreView = false }) {
   const { genreId = '' } = useParams()
   const [movies, setMovies] = useState([])
   const [genres, setGenres] = useState([])

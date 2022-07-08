@@ -1,22 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { initializeApp } from 'firebase/app'
 import { getStorage } from './lib/storage'
 
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  linkWithPopup,
-} from 'firebase/auth'
-
 import GenresView from './Views/Genres'
 import DiscoverView from './Views/Discover'
 import Topmenu from './Components/Topmenu'
 import MovieView from './Views/MovieView'
-import login from './lib/login'
 import AccountView from './Views/Account'
 
 function App() {
@@ -25,7 +16,7 @@ function App() {
   )
   const [userInfo, setUserInfo] = useState(getStorage('userInfo') || {})
 
-  const routes = [
+  const routes: RouteInfo<ReactElement>[] = [
     {
       path: '/',
       element: <h1 className="text-purple-700 font-bold">Home</h1>,
@@ -106,7 +97,6 @@ function App() {
         {routes.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />
         ))}
-        />
       </Routes>
     </BrowserRouter>
   )
