@@ -5,22 +5,14 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-import {
-  Button,
-  ButtonProps,
-  Dropdown,
-  Icon,
-  Image,
-  Input,
-  Menu,
-  Modal,
-} from 'semantic-ui-react'
+import { ButtonProps, Dropdown, Image, Input, Menu } from 'semantic-ui-react'
 import { Link, To, useLocation } from 'react-router-dom'
 import login from '../lib/login'
 import logout from '../lib/logout'
 
 import useStore from '../store'
 import { getStorage, setStorage } from '../lib/storage'
+import LoginModal from './LoginModal'
 
 interface Props {
   routes: RouteInfo<ReactElement>[]
@@ -105,33 +97,11 @@ function Topmenu({ routes }: Props) {
             </Dropdown>
           </Menu.Item>
         ) : (
-          <Modal
-            size={'mini'}
-            dimmer={'blurring'}
-            onOpen={() => setSignInModalOpen(true)}
-            onClose={() => setSignInModalOpen(false)}
-            open={signInModalOpen}
-            trigger={
-              <Menu.Item>
-                <Button circular basic color="blue">
-                  <Icon name={'user circle'} />
-                  Sign in
-                </Button>
-              </Menu.Item>
-            }
-          >
-            <Modal.Header>Sign in with your favourite SSO</Modal.Header>
-            <Modal.Content>
-              <Button name="google" basic onClick={handleSignInClick}>
-                <Icon name="google" />
-                Google
-              </Button>
-              <Button name="github" basic onClick={handleSignInClick}>
-                <Icon name="github" />
-                GitHub
-              </Button>
-            </Modal.Content>
-          </Modal>
+          <LoginModal
+            signInModalOpen={signInModalOpen}
+            setSignInModalOpen={setSignInModalOpen}
+            handleSignInClick={handleSignInClick}
+          />
         )}
       </Menu.Menu>
     </Menu>

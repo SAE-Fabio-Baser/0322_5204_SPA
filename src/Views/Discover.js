@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import movieDB from '../lib/MovieDB'
-import { Label } from 'semantic-ui-react'
 import { Link, useParams } from 'react-router-dom'
 
 function DiscoverView({ genreView = false }) {
@@ -11,9 +10,9 @@ function DiscoverView({ genreView = false }) {
   console.log(genreId)
 
   useEffect(() => {
-    movieDB.getGenres({ language: 'de_DE' }).then((data) => {
+    movieDB.getGenres({ language: 'de_DE' }).then(data => {
       const genres = {}
-      data.genres.forEach((genre) => {
+      data.genres.forEach(genre => {
         genres[genre.id] = genre.name
       })
 
@@ -27,7 +26,7 @@ function DiscoverView({ genreView = false }) {
 
     movieDB
       .discoverMovies(discoverOptions)
-      .then((data) => setMovies(data.results))
+      .then(data => setMovies(data.results))
   }, [genreId])
 
   console.debug('Movies: ', movies)
@@ -38,7 +37,7 @@ function DiscoverView({ genreView = false }) {
       <h1 className={'text-7xl text-center m-8'}>{genres[genreId]}</h1>
 
       <div className="grid grid-cols-8 gap-4">
-        {movies.map((movie) => {
+        {movies.map(movie => {
           return (
             <Link key={movie.id} to={'/movie/' + movie.id}>
               <div>
