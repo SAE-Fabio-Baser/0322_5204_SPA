@@ -1,8 +1,7 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { initializeApp } from 'firebase/app'
-import { getStorage } from './lib/storage'
 
 import GenresView from './Views/Genres'
 import DiscoverView from './Views/Discover'
@@ -10,11 +9,10 @@ import Topmenu from './Components/Topmenu'
 import MovieView from './Views/MovieView'
 import AccountView from './Views/Account'
 
+import useStore from './store'
+
 function App() {
-  const [userCredentials, setUserCredentials] = useState(
-    getStorage('userCredentials') || {}
-  )
-  const [userInfo, setUserInfo] = useState(getStorage('userInfo') || {})
+  useStore.subscribe(newState => (window.store = newState))
 
   const routes: RouteInfo<ReactElement>[] = [
     {
@@ -80,19 +78,10 @@ function App() {
     const firebase = initializeApp(firebaseConfig)
   }, [])
 
-  console.debug('UserCredentials: ', userCredentials)
-  console.debug('UserInfo: ', userInfo)
-
   return (
     <BrowserRouter>
       <ToastContainer />
-      <Topmenu
-        routes={routes}
-        userCredentials={userCredentials}
-        setUserCredentials={setUserCredentials}
-        userInfo={userInfo}
-        setUserInfo={setUserInfo}
-      />
+      <Topmenu routes={routes} />
       <Routes>
         {routes.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />

@@ -7,7 +7,11 @@ export function setStorage(key: string, value: any): void {
 }
 
 export function getStorage(key: string) {
-  return JSON.parse(localStorage.getItem(prefix + key) || '')
+  try {
+    return JSON.parse(localStorage.getItem(prefix + key) || '')
+  } catch (e) {
+    return null
+  }
 }
 
 export function removeStorage(key: string): void {

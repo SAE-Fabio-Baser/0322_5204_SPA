@@ -10,8 +10,8 @@ import OAuthCredential = firebase.auth.OAuthCredential
 import User = firebase.User
 
 export default function login(providerName: SupportedProvider): Promise<{
-  credentials: OAuthCredential | null
-  userInfo: Partial<User> | null
+  credential: OAuthCredential | null
+  firebaseUser: Partial<User> | null
 }> {
   const providers = {
     google: GoogleAuthProvider,
@@ -24,11 +24,11 @@ export default function login(providerName: SupportedProvider): Promise<{
 
     const auth = getAuth()
     signInWithPopup(auth, provider)
-      .then((response) => {
-        const credentials = GoogleAuthProvider.credentialFromResult(response)
-        setStorage('userCredentials', credentials)
+      .then(response => {
+        const credential = GoogleAuthProvider.credentialFromResult(response)
+        setStorage('userCredentials', credential)
         setStorage('userInfo', auth.currentUser)
-        resolve({ credentials, userInfo: auth.currentUser })
+        resolve({ credential, firebaseUser: auth.currentUser })
       })
       .catch(reject)
   })

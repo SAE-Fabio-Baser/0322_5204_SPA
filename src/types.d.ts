@@ -1,35 +1,5 @@
-interface UserCredentials {
-  accessToken?: string
-  idToken?: string
-  pendingToken?: null
-  providerId: string
-  signInMethod: string
-}
-
-interface UserInfo {
-  apiKey?: string
-  appName?: string
-  createdAt?: string
-  displayName?: string | null
-  email?: string | null
-  emailVerified?: Boolean
-  isAnonymous: Boolean
-  lastLoginAt?: string
-  photoURL: string | null
-  providerData: {
-    displayName: string
-    email: string
-    phoneNumber: null | string
-    photoURL: string
-    providerId: 'google.com' | 'github.com'
-    uid: string
-  }[]
-  stsTokenManager?: {
-    refreshToken: string
-    accessToken: string
-    expirationTime: Number
-  }
-  uid: string
+declare interface Window {
+  store: Record<any, any>
 }
 
 interface RouteInfo<ElementType> {

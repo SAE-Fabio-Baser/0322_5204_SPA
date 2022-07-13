@@ -1,4 +1,10 @@
-import React, { Key, MouseEvent, ReactElement, useState } from 'react'
+import React, {
+  Key,
+  MouseEvent,
+  ReactElement,
+  useEffect,
+  useState,
+} from 'react'
 import {
   Button,
   ButtonProps,
@@ -12,37 +18,42 @@ import {
 import { Link, To, useLocation } from 'react-router-dom'
 import login from '../lib/login'
 import logout from '../lib/logout'
-import firebase from 'firebase/compat'
-import User = firebase.User
-import OAuthCredential = firebase.auth.OAuthCredential
+
+import useStore from '../store'
+import { getStorage, setStorage } from '../lib/storage'
 
 interface Props {
   routes: RouteInfo<ReactElement>[]
-  userCredentials: OAuthCredential
-  setUserCredentials: (userCredentials: OAuthCredential | null) => void
-  userInfo: Partial<User>
-  setUserInfo: (userInfo: Partial<User> | null) => void
 }
 
-function Topmenu({
-  routes,
-  userCredentials,
-  setUserInfo,
-  userInfo,
-  setUserCredentials,
-}: Props) {
+function Topmenu({ routes }: Props) {
+  const credential = useStore(state => state.credential)
+  const firebaseUser = useStore(state => state.firebaseUser)
+  const setCredential = useStore(state => state.setCredential)
+  const setFirebaseUser = useStore(state => state.setFirebaseUser)
+
   const { pathname } = useLocation()
   const [signInModalOpen, setSignInModalOpen] = useState(false)
-  const isLoggedIn = !!userCredentials?.accessToken
+  const isLoggedIn = !!credential?.accessToken
+
+  useEffect(() => {
+    const storedFirebaseUser = getStorage('firebaseUser')
+    const storedCredential = getStorage('credential')
+
+    storedCredential && setCredential(storedCredential)
+    storedFirebaseUser && setFirebaseUser(storedFirebaseUser)
+  }, [])
 
   function handleSignInClick(
     e: MouseEvent<HTMLButtonElement>,
     { name }: ButtonProps
   ) {
     login(name)
-      .then(({ credentials, userInfo }) => {
-        setUserCredentials(credentials)
-        setUserInfo(userInfo)
+      .then(({ credential, firebaseUser }) => {
+        setCredential(credential)
+        setStorage('credential', credential)
+        setFirebaseUser(firebaseUser)
+        setStorage('firebaseUser', firebaseUser)
       })
       .catch(console.error)
   }
@@ -51,7 +62,7 @@ function Topmenu({
     <Menu secondary>
       <Menu.Menu>
         {routes.map(
-          (route) =>
+          route =>
             route.showInMainNav && (
               <Link to={route.path as To} key={route.path as Key}>
                 <Menu.Item active={route.path === pathname}>
@@ -74,10 +85,10 @@ function Topmenu({
           <Menu.Item>
             <Image
               avatar
-              src={userInfo?.photoURL}
+              src={firebaseUser?.photoURL}
               referrerPolicy="no-referrer"
             />
-            <Dropdown text={userInfo.displayName || ''}>
+            <Dropdown text={firebaseUser?.displayName || ''}>
               <Dropdown.Menu>
                 <Dropdown.Item text="Account" />
                 <Dropdown.Item disabled text="Settings" />
@@ -86,8 +97,8 @@ function Topmenu({
                   text="Logout"
                   onClick={() => {
                     logout()
-                    setUserInfo(null)
-                    setUserCredentials(null)
+                    setFirebaseUser(null)
+                    setCredential(null)
                   }}
                 />
               </Dropdown.Menu>
