@@ -5,15 +5,16 @@ import User = firebase.User
 import { collection, getDocs } from 'firebase/firestore/lite'
 import { FirebaseApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
+import Watchlist from './Views/Watchlist'
 
-interface StoreState {
+export interface StoreState {
   credential: OAuthCredential | null
   firebaseUser: Partial<User> | null
   setCredential: (newCredential: OAuthCredential | null) => void
   setFirebaseUser: (newUser: Partial<User> | null) => void
   firebaseApp: null | FirebaseApp
   setFirebaseApp: (firebaseApp: FirebaseApp) => void
-  watchlists: any[]
+  watchlists: Watchlist[]
   fetchWatchtlists: () => void
 }
 
@@ -33,13 +34,27 @@ const useStore = createStore<StoreState>((set, get) => ({
 
     const watchlistsColl = collection(db, 'watchlists')
     const watchlistDocs = await getDocs(watchlistsColl)
-    const watchlists = watchlistDocs.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
+    const watchlists = watchlistDocs.docs.map(
+      doc =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as Watchlist)
+    )
 
-    console.log(watchlists)
-    set({ watchlists })
+    const currentUserId = get().firebaseUser?.uid
+
+    const myWatchlists = watchlists.filter(list => {
+      const isOwner = list.owner?.id === currentUserId
+
+      const isCollaborator = !!list.collaborators?.filter(
+        collab => collab.id === currentUserId
+      )
+
+      return isOwner || isCollaborator
+    })
+
+    set({ watchlists: myWatchlists })
   },
 }))
 

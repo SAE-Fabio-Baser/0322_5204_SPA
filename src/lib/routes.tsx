@@ -4,6 +4,7 @@ import MovieView from '../Views/MovieView'
 import WatchlistView from '../Views/Watchlist'
 import GenresView from '../Views/Genres'
 import AccountView from '../Views/Account'
+import WatchlistDetailView from '../Views/WatchlistDetail'
 
 const routes: RouteInfo<ReactElement>[] = [
   {
@@ -29,6 +30,12 @@ const routes: RouteInfo<ReactElement>[] = [
     element: <WatchlistView />,
     navText: 'My Watchlist',
     showInMainNav: true,
+  },
+  {
+    path: '/watchlist/:watchlistId',
+    element: <WatchlistDetailView />,
+    navText: '',
+    showInMainNav: false,
   },
   {
     path: '/genres',
