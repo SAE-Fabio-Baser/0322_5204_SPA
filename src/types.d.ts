@@ -18,6 +18,13 @@ interface Watchlist {
   collaborators?: WatchlistUser[]
 }
 
+interface MovieSearchResult {
+  page: number
+  total_pages: number
+  total_results: number
+  results: TMDB_Movie[]
+}
+
 interface TMDB_Movie {
   adult: boolean
   backdrop_path: string

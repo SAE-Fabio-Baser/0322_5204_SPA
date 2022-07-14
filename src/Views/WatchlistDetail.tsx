@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import useStore from '../store'
 import Watchlist from './Watchlist'
 import { getWatchlistById } from '../lib/db'
+import { Header, Label, Image } from 'semantic-ui-react'
 
 function WatchlistDetailView() {
+  const navigate = useNavigate()
   const { watchlistId = '' } = useParams()
   const [watchlist, setWatchlist] = useState<Watchlist | undefined>(undefined)
   const firebaseApp = useStore(state => state.firebaseApp)
@@ -14,9 +16,27 @@ function WatchlistDetailView() {
     getWatchlistById(firebaseApp, watchlistId).then(setWatchlist)
   }, [])
 
+  const editors: WatchlistUser[] = watchlist
+    ? [watchlist.owner, ...(watchlist.collaborators || [])]
+    : []
+
   return (
     <div>
-      My watchlist: {watchlistId}
+      <Header as={'h1'}>{watchlist?.name}</Header>
+      <Header as={'h4'}>{watchlist?.desc}</Header>
+      <div>
+        {watchlist?.genres?.map(genre => (
+          <Label basic size="tiny" key={genre.id}>
+            {genre.name.toUpperCase()}
+          </Label>
+        ))}
+      </div>
+
+      <div>
+        {editors.map(collab => (
+          <Image avatar src={collab.photoURL} />
+        ))}
+      </div>
       <div className="grid grid-cols-8 gap-4">
         {watchlist?.movies?.map(movie => {
           return (

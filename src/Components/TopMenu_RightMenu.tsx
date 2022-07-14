@@ -1,6 +1,14 @@
-import React, { MouseEvent, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Dropdown, Input, Image, Menu, ButtonProps } from 'semantic-ui-react'
+import React, { ChangeEvent, MouseEvent, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  Dropdown,
+  Input,
+  Image,
+  Menu,
+  ButtonProps,
+  InputProps,
+  Button,
+} from 'semantic-ui-react'
 import logout from '../lib/logout'
 import login from '../lib/login'
 import { setStorage } from '../lib/storage'
@@ -23,6 +31,8 @@ function TopMenu_RightMenu({
   setCredential,
 }: Props) {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const [searchFocus, setSearchFocus] = useState(false)
   const [signInModalOpen, setSignInModalOpen] = useState(false)
 
   function handleSignInClick(
@@ -39,13 +49,17 @@ function TopMenu_RightMenu({
       .catch(console.error)
   }
 
+  function handleSearchChange() {
+    navigate('/search/')
+  }
+
   return (
     <Menu.Menu position="right">
       <Menu.Item active={'/search' === pathname}>
-        <Input
-          transparent
+        <Button
+          basic
           icon={{ name: 'search', link: true }}
-          placeholder="Search ..."
+          onClick={handleSearchChange}
         />
       </Menu.Item>
       {!isLoggedIn && <Menu.Item>Register</Menu.Item>}
