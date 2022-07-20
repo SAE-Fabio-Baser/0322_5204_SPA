@@ -18,7 +18,8 @@ async function get(endpoint: string, options: Options = {}) {
 }
 
 export default {
-  getGenres: (o: Options) => get('/genre/movie/list', o),
+  getGenres: (o: Options): Promise<{ genres: GenreInfo[] }> =>
+    get('/genre/movie/list', o),
   discoverMovies: (o: Options) => get('/discover/movie', o),
   getMovie: ({ movie_id, ...o }: Options) => get(`/movie/${movie_id}`, o),
   searchForMovies: (o: Options): Promise<MovieSearchResult> =>

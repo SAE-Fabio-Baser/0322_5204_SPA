@@ -2,6 +2,11 @@ declare interface Window {
   store: Record<any, any>
 }
 
+interface GenreInfo {
+  id: string
+  name: string
+}
+
 interface WatchlistUser {
   name: string
   id: string
@@ -40,6 +45,7 @@ interface TMDB_Movie {
   video: boolean
   vote_average: number
   vote_count: number
+  tagline?: string
 }
 
 interface TMDB_Provider {
