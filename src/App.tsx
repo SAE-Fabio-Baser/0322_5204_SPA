@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { initializeApp } from 'firebase/app'
+import { getDatabase, set, push, ref } from 'firebase/database'
 import Topmenu from './Components/Topmenu'
 import useStore from './store'
 
@@ -15,6 +16,7 @@ function App() {
 
   useEffect(() => {
     const firebaseApp = initializeApp(config.firebaseConfig)
+
     setFirebaseApp(firebaseApp)
   }, [])
 

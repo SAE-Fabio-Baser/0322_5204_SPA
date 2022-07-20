@@ -8,5 +8,7 @@ export default {
     storageBucket: 'movieparty-93773.appspot.com',
     messagingSenderId: '40895682681',
     appId: '1:40895682681:web:19f65a7ba491157e8c5ca8',
+    databaseURL:
+      'https://movieparty-93773-default-rtdb.europe-west1.firebasedatabase.app/',
   },
 }

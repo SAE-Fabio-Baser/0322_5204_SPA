@@ -2,6 +2,16 @@ declare interface Window {
   store: Record<any, any>
 }
 
+declare namespace MovieParty {
+  interface Notification {
+    id?: string
+    code: string
+    message: string
+    data: Record<string, string | number | boolean>
+    time: number
+  }
+}
+
 interface GenreInfo {
   id: string
   name: string
