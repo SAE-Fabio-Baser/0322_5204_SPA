@@ -4,17 +4,25 @@ import useStore from '../store'
 import Watchlist from './Watchlist'
 import { getWatchlistById } from '../lib/db'
 import MovieDB from '../lib/MovieDB'
-import { Label, Image, Input, Dropdown } from 'semantic-ui-react'
+import {
+  Label,
+  Image,
+  Input,
+  Dropdown,
+  Modal,
+  Button,
+  InputProps,
+} from 'semantic-ui-react'
 import MovieThumb from '../Components/MovieThumb'
 
 function WatchlistDetailView() {
-  const navigate = useNavigate()
   const { watchlistId = '' } = useParams()
   const firebaseApp = useStore(state => state.firebaseApp)
   const [watchlist, setWatchlist] = useState<Watchlist | undefined>(undefined)
   const [genres, setGenres] = useState<
     { key: string; value: string; text: string; basic: true }[]
   >([])
+  const [query, setQuery] = useState('')
   const [nameInputValue, setNameInputValue] = useState('')
   const [descInputValue, setDescInputValue] = useState('')
 
@@ -47,6 +55,10 @@ function WatchlistDetailView() {
   const editors: WatchlistUser[] = watchlist
     ? [watchlist.owner, ...(watchlist.collaborators || [])]
     : []
+
+  function handleUserSearch(e: MouseEvent, data: InputProps) {
+    console.log(query)
+  }
 
   return (
     <div>
@@ -103,6 +115,26 @@ function WatchlistDetailView() {
             {editors.map(collab => (
               <Image avatar src={collab.photoURL} key={collab.id} />
             ))}
+
+            <Modal
+              size="small"
+              trigger={<Button basic>Invite</Button>}
+              open={false}
+            >
+              <Modal.Header>Invite new Watchlist Collaborator</Modal.Header>
+              <Modal.Content style={{ textAlign: 'center' }}>
+                <Input
+                  placeholder={'Username ...'}
+                  value={query}
+                  onChange={(e, data) => setQuery(data.value)}
+                  action={{
+                    icon: 'search',
+                    basic: true,
+                    onClick: handleUserSearch,
+                  }}
+                />
+              </Modal.Content>
+            </Modal>
           </div>
         </div>
       </div>

@@ -6,8 +6,7 @@ declare namespace MovieParty {
   interface Notification {
     id?: string
     code: string
-    message: string
-    data: Record<string, string | number | boolean>
+    data?: Record<string, string | number | boolean>
     time: number
   }
 }

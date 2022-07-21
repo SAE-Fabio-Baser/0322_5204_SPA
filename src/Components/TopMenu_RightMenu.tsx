@@ -49,16 +49,13 @@ function TopMenu_RightMenu({
 
     const db = getDatabase(firebaseApp)
 
-    const notifRef = ref(db, 'notifications/' + 'eyJieoj')
-
-    onValue(notifRef, snapshot => {
+    onValue(ref(db, 'notifications/' + 'eyJieoj'), snapshot => {
       const data = snapshot.val()
       if (!data) {
         setNotifications([])
         return
       }
       const notifIds = Object.keys(data)
-
       const notifications = notifIds.map(id => ({ id, ...data[id] }))
       setNotifications(notifications)
     })
@@ -68,7 +65,8 @@ function TopMenu_RightMenu({
     e: MouseEvent<HTMLButtonElement>,
     { name }: ButtonProps
   ) {
-    login(name)
+    if (!firebaseApp) return
+    login(name, firebaseApp)
       .then(({ credential, firebaseUser }) => {
         setCredential(credential)
         setStorage('credential', credential)
@@ -110,7 +108,7 @@ function TopMenu_RightMenu({
             {notifications.map(notif => {
               return (
                 <List.Item key={notif.id}>
-                  {notif.message}
+                  {notif.code}
                   <Button
                     icon={'x'}
                     notifid={notif.id}
